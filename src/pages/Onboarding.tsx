@@ -101,6 +101,7 @@ export default function Onboarding() {
   function complete() {
     localStorage.setItem('penny-drop-onboarded', 'true')
     localStorage.setItem('penny-drop-user-name', form.name)
+    localStorage.setItem('penny-drop-tracking-start', form.trackingStartDate)
     navigate('/')
   }
 

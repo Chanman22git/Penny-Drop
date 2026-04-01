@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, isWithinInterval, addDays } from 'date-fns'
+import { format, formatDistanceToNow, isWithinInterval, addDays, eachMonthOfInterval, startOfMonth, endOfMonth } from 'date-fns'
 import type { Subscription, SubscriptionCategory } from '../types'
 
 export function formatCurrency(amount: number, currency = 'INR'): string {
@@ -111,4 +111,36 @@ export const CATEGORY_COLORS: Record<string, string> = {
 
 export function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ')
+}
+
+export interface TrendPoint {
+  month: string       // "Jan 25"
+  cost: number        // total monthly cost that month
+  count: number       // number of active subs that month
+}
+
+export function generateTrendData(
+  subs: Subscription[],
+  fromDate: Date,
+  toDate: Date
+): TrendPoint[] {
+  const months = eachMonthOfInterval({ start: fromDate, end: toDate })
+  return months.map((month) => {
+    const mStart = startOfMonth(month)
+    const mEnd = endOfMonth(month)
+    const activeSubs = subs.filter((sub) => {
+      const start = new Date(sub.startDate)
+      if (start > mEnd) return false
+      if (sub.status === 'cancelled') {
+        const cancelledAt = new Date(sub.updatedAt)
+        return cancelledAt >= mStart
+      }
+      return true
+    })
+    return {
+      month: format(month, 'MMM yy'),
+      cost: Math.round(activeSubs.reduce((sum, s) => sum + getMonthlyAmount(s), 0)),
+      count: activeSubs.length,
+    }
+  })
 }

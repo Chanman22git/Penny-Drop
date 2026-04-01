@@ -5,6 +5,7 @@ import MetricCard from '../components/ui/MetricCard'
 import CategoryChart from '../components/dashboard/CategoryChart'
 import RenewalWidget from '../components/dashboard/RenewalWidget'
 import SubscriptionTable from '../components/dashboard/SubscriptionTable'
+import TrendChart from '../components/dashboard/TrendChart'
 
 export default function Dashboard() {
   const { subscriptions } = useSubscriptions()
@@ -48,6 +49,9 @@ export default function Dashboard() {
           icon={<CalendarClock className="w-5 h-5" />}
         />
       </div>
+
+      {/* Trend chart — full width */}
+      <TrendChart />
 
       {/* Charts & Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
