@@ -1,13 +1,21 @@
 import { useState } from 'react'
-import { Mail, Bell, Globe, Shield, Plus, Trash2, RefreshCw } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Mail, Bell, Globe, Shield, Plus, Trash2, RefreshCw, RotateCcw } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import { mockGmailIntegrations } from '../data/mockData'
 import type { GmailIntegration } from '../types'
 
 export default function Settings() {
   const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
   const [emailAccounts] = useState<GmailIntegration[]>(mockGmailIntegrations)
   const [currency, setCurrency] = useState('INR')
+
+  function resetOnboarding() {
+    localStorage.removeItem('penny-drop-onboarded')
+    localStorage.removeItem('penny-drop-user-name')
+    navigate('/onboarding')
+  }
   const [reminderDays, setReminderDays] = useState(7)
   const [notifications, setNotifications] = useState({
     renewalReminders: true,
@@ -211,6 +219,12 @@ export default function Settings() {
           </button>
           <button className="w-full text-left px-4 py-3 rounded-lg border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
             Delete All Data
+          </button>
+          <button
+            onClick={resetOnboarding}
+            className="w-full flex items-center gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-sm"
+          >
+            <RotateCcw className="w-4 h-4" /> Restart Onboarding
           </button>
         </div>
       </section>

@@ -13,6 +13,23 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Mobile top header */}
+      <header className="md:hidden fixed top-0 inset-x-0 z-40 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700">
+        <div className="flex items-center gap-3 px-4 h-14">
+          <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
+            <CreditCard className="w-4 h-4 text-white" />
+          </div>
+          <h1 className="text-base font-bold text-gray-900 dark:text-white">Penny Drop</h1>
+          <div className="flex-1" />
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
+        </div>
+      </header>
+
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700">
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-200 dark:border-slate-700">
@@ -57,32 +74,32 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 z-50">
-        <div className="flex items-center justify-around py-2">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className="flex items-center justify-around h-14">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
+              end={item.to === '/'}
               className={({ isActive }) =>
                 cn(
-                  'flex flex-col items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors',
+                  'flex flex-col items-center gap-1 flex-1 py-2 text-xs font-medium transition-colors',
                   isActive
                     ? 'text-primary-600 dark:text-primary-400'
-                    : 'text-gray-500 dark:text-slate-400'
+                    : 'text-gray-400 dark:text-slate-500'
                 )
               }
             >
-              <item.icon className="w-5 h-5" />
-              {item.label}
+              {({ isActive }) => (
+                <>
+                  <div className={cn('p-1 rounded-lg transition-colors', isActive && 'bg-primary-50 dark:bg-primary-900/30')}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  {item.label}
+                </>
+              )}
             </NavLink>
           ))}
-          <button
-            onClick={toggleTheme}
-            className="flex flex-col items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-slate-400"
-          >
-            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-            Theme
-          </button>
         </div>
       </nav>
     </>
